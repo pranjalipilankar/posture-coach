@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react"
 import { CircularBuffer } from "../utils/CircularBuffer"
 import { PostureFSM, type PostureState } from "../utils/PostureFSM"
-import { useSession } from "../hooks/useSession"
+//import { useSession } from "../hooks/useSession"
 
 declare global {
   interface Window {

@@ -56,7 +56,7 @@ function Dashboard() {
   const avgScore    = sessions.length
     ? Math.round(sessions.reduce((sum, s) => sum + s.avgScore, 0) / sessions.length)
     : 0
-  const totalHours  = Math.round(sessions.reduce((sum, s) => sum + s.duration, 0) / 60)
+  //const totalHours  = Math.round(sessions.reduce((sum, s) => sum + s.duration, 0) / 60)
   const bestScore   = sessions.length ? Math.max(...sessions.map(s => s.avgScore)) : 0
 
   return (
