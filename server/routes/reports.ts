@@ -65,7 +65,6 @@ router.get("/generate", authMiddleware, async (req: AuthRequest, res: Response) 
     const worstDay = dayAvgs.sort((a, b) => a.avg - b.avg)[0]?.day || "unknown"
 
     // --- Step 3: Build prompt ---
-    // Context injection — real MongoDB data fed into the prompt
     const prompt = `
 You are a workplace ergonomics coach. Analyze this person's posture data from the past week and give specific, actionable advice.
 
@@ -100,27 +99,29 @@ Rules:
 - tips: specific and actionable, not generic. Reference their actual data.
 - Return ONLY the JSON, nothing else.
 `
-    // --- Step 4: Call Gemini API --- (pure fetch, no SDK version issues)
-    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 500
-      })
-    })
+    // --- Step 4: Call Gemini API ---
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 500
+          }
+        })
+      }
+    )
     
-    const openaiData = await openaiRes.json()
+    const geminiData = await geminiRes.json()
     
-    if (openaiData.error) {
-      throw new Error(`OpenAI error: ${openaiData.error.message}`)
+    if (geminiData.error) {
+      throw new Error(`Gemini error: ${geminiData.error.message}`)
     }
     
-    const rawText = openaiData.choices[0].message.content
+    const rawText = geminiData.candidates[0].content.parts[0].text
 
     // Strip markdown backticks if Gemini wraps in ```json ... ```
     const cleanText = rawText.replace(/```json|```/g, "").trim()
