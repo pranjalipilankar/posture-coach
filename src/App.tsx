@@ -6,6 +6,8 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Dashboard from "./pages/Dashboard"
 import Report from "./pages/Report"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword  from "./pages/ResetPassword"
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
           } />
           {/* Catch all — redirect unknown URLs to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password"  element={<ResetPassword />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

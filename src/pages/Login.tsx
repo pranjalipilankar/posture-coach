@@ -67,6 +67,9 @@ function Login() {
           no account?{" "}
           <Link to="/register" style={{ color: "#00e5ff" }}>register</Link>
         </p>
+        <p style={styles.link}>
+          <Link to="/forgot-password" style={{ color: "#64748b" }}>forgot password?</Link>
+        </p>
       </div>
     </div>
   )
