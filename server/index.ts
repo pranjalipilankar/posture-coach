@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/auth"
 import sessionRoutes from "./routes/sessions"
 import reportRoutes from "./routes/reports"   // ← add import
+import rateLimit from "express-rate-limit"
 console.log("reportRoutes loaded:", typeof reportRoutes)  // add this
 
 dotenv.config()
@@ -25,7 +26,13 @@ app.use(cors({
   credentials: true
 }))
 
-// --- Routes ---
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 100,                   // max 100 requests per IP
+  message: { error: "Too many requests, please try again later" }
+})
+
+app.use("/api", limiter)// --- Routes ---
 app.use("/api/auth", authRoutes)
 app.use("/api/sessions", sessionRoutes)
 app.use("/api/reports", reportRoutes)          // ← add route
@@ -34,10 +41,10 @@ app.get("/api/reports/debug", (_req, res) => {
   res.json({ message: "direct route works" })
 })
 
-console.log("Routes registered:")
-console.log("  /api/auth")
-console.log("  /api/sessions")
-console.log("  /api/reports")
+// console.log("Routes registered:")
+// console.log("  /api/auth")
+// console.log("  /api/sessions")
+// console.log("  /api/reports")
 
 // Health check — quick way to confirm server is running
 app.get("/api/health", (_req, res) => {

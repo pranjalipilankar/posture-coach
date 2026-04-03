@@ -5,10 +5,10 @@ import Report from "../models/Report"
 
 const router = Router()
 
-// TEMP — test route without auth
-router.get("/test", (_req, res) => {
-  res.json({ message: "reports router working" })
-})
+// // TEMP — test route without auth
+// router.get("/test", (_req, res) => {
+//   res.json({ message: "reports router working" })
+// })
 
 // --- Auth Middleware (same pattern as sessions.ts) ---
 interface AuthRequest extends Request {
